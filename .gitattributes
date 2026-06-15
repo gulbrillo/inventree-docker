@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Files consumed on the Linux server must always use LF line endings.
+*.sh        text eol=lf
+Caddyfile   text eol=lf
+*.yml       text eol=lf
+.env.template text eol=lf

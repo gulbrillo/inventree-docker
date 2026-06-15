@@ -1,0 +1,21 @@
+# Apache reverse-proxy override for InvenTree.
+#
+# Docker Compose loads this file automatically on top of docker-compose.yml.
+# It changes ONE thing: instead of letting the bundled Caddy proxy bind the
+# host's :80 and :443 (and obtain its own TLS certs), Caddy is published only
+# on loopback HTTP at 127.0.0.1:8087.
+#
+# Host Apache then terminates TLS and reverse-proxies to 127.0.0.1:8087.
+# See apache/inventree.darkcosmos.org.conf for the matching vhost.
+#
+# Caddy still serves /static and /media and proxies everything else to gunicorn
+# (see the local Caddyfile, which listens on :80 inside the container).
+#
+# NOTE: the '!override' tag REPLACES the upstream ports list (rather than
+# appending to it), so the public :80/:443 bindings are dropped. Requires
+# Docker Compose v2.24+.
+
+services:
+    inventree-proxy:
+        ports: !override
+            - "127.0.0.1:8087:80"
